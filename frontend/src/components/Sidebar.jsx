@@ -1,0 +1,70 @@
+import { Link } from 'react-router-dom';
+import { LayoutDashboard, FileText, CreditCard, ShieldAlert, LogOut, Settings } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+
+export default function Sidebar({ role = "USER" }) {
+  const { logout, userEmail } = useAuth();
+  const displayName = userEmail ? userEmail.split('@')[0] : (role === 'ADMIN' ? 'Admin' : 'User');
+
+  const adminLinks = [
+    { name: 'Admin Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
+    { name: 'Manage Policies', path: '/admin/policies', icon: <FileText size={20} /> },
+    { name: 'Manage Plans', path: '/admin/plans', icon: <ShieldAlert size={20} /> },
+    { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
+  ];
+
+  const userLinks = [
+    { name: 'My Policies', path: '/dashboard', icon: <FileText size={20} /> },
+    { name: 'Pay Installment', path: '/payments', icon: <CreditCard size={20} /> },
+  ];
+
+  const links = role === 'ADMIN' ? adminLinks : userLinks;
+
+  return (
+    <div className="w-64 bg-lic-dark text-white flex flex-col min-h-[calc(100vh-80px)] border-r border-gray-800 shadow-2xl">
+      <div className="p-6">
+        <h3 className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-3">
+          {role === 'ADMIN' ? 'Admin Panel' : 'My Account'}
+        </h3>
+        
+        {/* User Profile Card */}
+        <div className="flex items-center gap-3 mb-6 p-3 bg-gray-800/50 rounded-xl border border-gray-700/50">
+          <div className="w-10 h-10 rounded-full bg-lic-gold text-lic-dark flex items-center justify-center font-bold text-lg shadow-inner">
+            {displayName.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex flex-col truncate w-full">
+            <span className="text-sm font-bold text-white truncate capitalize">{displayName}</span>
+            <span className="text-xs text-gray-400 truncate" title={userEmail}>{userEmail || 'No Email'}</span>
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          {links.map((link) => {
+            const isActive = window.location.pathname === link.path;
+            return (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                  isActive 
+                    ? 'bg-lic-blue text-lic-gold shadow-md' 
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                {link.icon}
+                {link.name}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+      
+      <div className="mt-auto p-6 border-t border-gray-800">
+        <button onClick={logout} className="flex items-center gap-3 text-gray-400 hover:text-red-400 w-full px-4 py-2 font-medium transition-colors">
+          <LogOut size={20} />
+          Sign Out
+        </button>
+      </div>
+    </div>
+  );
+}
