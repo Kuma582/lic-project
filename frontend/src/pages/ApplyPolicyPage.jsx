@@ -16,6 +16,7 @@ export default function ApplyPolicyPage() {
   const [payMode, setPayMode] = useState('UPI');
   const [processing, setProcessing] = useState(false);
   const [transactionId, setTransactionId] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
 
   useEffect(() => {
     // Load Razorpay script
@@ -46,24 +47,37 @@ export default function ApplyPolicyPage() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (showErrors) setShowErrors(false);
+  };
+
+  const getInputClass = (fieldName) => {
+    const baseClass = "w-full px-4 py-3 rounded-lg border outline-none transition-colors ";
+    if (showErrors && !formData[fieldName]) {
+      return baseClass + "border-red-500 bg-red-50 focus:ring-2 focus:ring-red-400 placeholder-red-300";
+    }
+    return baseClass + "border-gray-300 focus:ring-2 focus:ring-lic-blue";
   };
 
   const handleNextStep = () => {
     if (step === 1) {
       if (!formData.fullName || !formData.phone || !formData.dob || !formData.gender || !formData.maritalStatus || !formData.address) {
+        setShowErrors(true);
         toast.error('Please fill all Personal Details before proceeding.');
         return;
       }
       if (formData.phone.length !== 10) {
+        setShowErrors(true);
         toast.error('Please enter a valid 10-digit phone number.');
         return;
       }
     } else if (step === 2) {
       if (!formData.nomineeName || !formData.nomineeRelationship || !formData.nomineeDob) {
+        setShowErrors(true);
         toast.error('Please fill all Nominee Details before proceeding.');
         return;
       }
     }
+    setShowErrors(false);
     setStep(step + 1);
   };
 
@@ -183,20 +197,20 @@ export default function ApplyPolicyPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Personal Information</h3>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" placeholder="As per Aadhaar" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name {showErrors && !formData.fullName && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className={getInputClass('fullName')} placeholder="As per Aadhaar" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" placeholder="10-digit mobile number" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number {showErrors && (!formData.phone || formData.phone.length !== 10) && <span className="text-red-500 text-xs ml-1">(10 digits required)</span>}</label>
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className={showErrors && (!formData.phone || formData.phone.length !== 10) ? getInputClass('phone').replace('border-gray-300', 'border-red-500 bg-red-50') : getInputClass('phone')} placeholder="10-digit mobile number" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                    <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth {showErrors && !formData.dob && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <input type="date" name="dob" value={formData.dob} onChange={handleChange} className={getInputClass('dob')} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                    <select name="gender" value={formData.gender} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Gender {showErrors && !formData.gender && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <select name="gender" value={formData.gender} onChange={handleChange} className={getInputClass('gender')}>
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -204,16 +218,16 @@ export default function ApplyPolicyPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Marital Status</label>
-                    <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Marital Status {showErrors && !formData.maritalStatus && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} className={getInputClass('maritalStatus')}>
                       <option value="">Select Status</option>
                       <option value="Single">Single</option>
                       <option value="Married">Married</option>
                     </select>
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Permanent Address</label>
-                    <textarea name="address" value={formData.address} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" rows="3"></textarea>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Permanent Address {showErrors && !formData.address && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <textarea name="address" value={formData.address} onChange={handleChange} className={getInputClass('address')} rows="3"></textarea>
                   </div>
                 </div>
               </div>
@@ -224,12 +238,12 @@ export default function ApplyPolicyPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Nominee Details</h3>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Nominee Full Name</label>
-                    <input type="text" name="nomineeName" value={formData.nomineeName} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nominee Full Name {showErrors && !formData.nomineeName && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <input type="text" name="nomineeName" value={formData.nomineeName} onChange={handleChange} className={getInputClass('nomineeName')} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Relationship</label>
-                    <select name="nomineeRelationship" value={formData.nomineeRelationship} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Relationship {showErrors && !formData.nomineeRelationship && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <select name="nomineeRelationship" value={formData.nomineeRelationship} onChange={handleChange} className={getInputClass('nomineeRelationship')}>
                       <option value="">Select Relationship</option>
                       <option value="Father">Father</option>
                       <option value="Mother">Mother</option>
@@ -238,8 +252,8 @@ export default function ApplyPolicyPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                    <input type="date" name="nomineeDob" value={formData.nomineeDob} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-lic-blue outline-none" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth {showErrors && !formData.nomineeDob && <span className="text-red-500 text-xs ml-1">(Required)</span>}</label>
+                    <input type="date" name="nomineeDob" value={formData.nomineeDob} onChange={handleChange} className={getInputClass('nomineeDob')} />
                   </div>
                 </div>
               </div>
