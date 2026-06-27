@@ -11,7 +11,7 @@ import AboutPage from './pages/AboutPage';
 import DashboardLayout from './components/DashboardLayout';
 import DashboardPage from './pages/DashboardPage';
 import MyPoliciesPage from './pages/MyPoliciesPage';
-import PremiumPaymentsPage from './pages/PremiumPaymentsPage';
+
 import ApplyPolicyPage from './pages/ApplyPolicyPage';
 import OverviewPage from './pages/admin/OverviewPage';
 import ApplicationsPage from './pages/admin/ApplicationsPage';
