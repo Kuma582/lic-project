@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 export default function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, type: 'bot', text: 'Hello! I am LIC Secure Assistant 🤖. How can I help you today?' }
+    { id: 1, type: 'bot', text: 'Namaste! I am LIC Secure Assistant 🤖. Main aapki kaise madad kar sakta hoon? (How can I help you?)' }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -24,47 +24,47 @@ export default function AIAssistant() {
   const generateBotResponse = (userInput) => {
     const text = userInput.toLowerCase();
     
-    if (text.includes('pay') || text.includes('premium') || text.includes('installment')) {
+    if (text.includes('pay') || text.includes('premium') || text.includes('installment') || text.includes('paisa') || text.includes('jama') || text.includes('payment') || text.includes('bharna')) {
       return (
         <span>
-          To pay your premium securely online, please visit the <Link to="/payments" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Payment Dashboard</Link>. You can use UPI, Cards, or NetBanking!
+          Apna premium jama karne ke liye (To pay premium), kripya <Link to="/payments" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Payment Dashboard</Link> par jayein. Aap UPI, Card ya NetBanking use kar sakte hain!
         </span>
       );
     }
     
-    if (text.includes('claim')) {
+    if (text.includes('claim') || text.includes('paisa wapas') || text.includes('wapas')) {
       return (
         <span>
-          Need to file a claim? You can submit your documents and track your claim status in the <Link to="/claims" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Claims Center</Link>.
+          Agar aapko claim file karna hai, toh aap apne documents <Link to="/claims" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Claims Center</Link> mein submit kar sakte hain.
         </span>
       );
     }
 
-    if (text.includes('register') || text.includes('account') || text.includes('sign up')) {
+    if (text.includes('register') || text.includes('account') || text.includes('sign up') || text.includes('khata') || text.includes('naya')) {
       return (
         <span>
-          Creating an account is easy! Head over to the <Link to="/register" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Registration Page</Link> to create your secure profile.
+          Naya account banana bahut aasan hai! Kripya <Link to="/register" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Registration Page</Link> par jaakar apni details bharein.
         </span>
       );
     }
     
-    if (text.includes('plan') || text.includes('policy') || text.includes('buy')) {
+    if (text.includes('plan') || text.includes('policy') || text.includes('buy') || text.includes('kharidna') || text.includes('lena hai')) {
       return (
         <span>
-          We offer various plans like Jeevan Anand, Jeevan Labh, and Bima Jyoti. Check them out on our <Link to="/plans" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Plans Page</Link> and apply online!
+          Humare paas Jeevan Anand, Jeevan Labh, aur Bima Jyoti jaise behtareen plans hain. Inhe dekhne ke liye <Link to="/plans" onClick={() => setIsOpen(false)} className="text-blue-400 font-bold underline hover:text-blue-300">Plans Page</Link> par jayein!
         </span>
       );
     }
 
-    if (text.includes('error') || text.includes('problem') || text.includes('fail')) {
-      return "I'm sorry you're facing an issue. Please try refreshing the page. If the problem persists, you can contact our support team at 1800-425-4422.";
+    if (text.includes('error') || text.includes('problem') || text.includes('fail') || text.includes('dikkat') || text.includes('issue')) {
+      return "Maaf kijiye (Sorry) agar aapko koi dikkat aa rahi hai. Kripya page ko refresh karein. Agar problem theek na ho, toh humare support team ko 1800-425-4422 par call karein.";
     }
 
-    if (text.includes('hello') || text.includes('hi')) {
-      return "Hello there! How can I assist you with LIC Secure Future today?";
+    if (text.includes('hello') || text.includes('hi') || text.includes('namaste')) {
+      return "Namaste! 🙏 LIC Secure Future mein aapka swagat hai. Main aapki kya madad kar sakta hoon?";
     }
 
-    return "I'm a simulated AI assistant for this project. I can help you with questions about payments, claims, registration, and our policies. What would you like to know?";
+    return "Main LIC ka ek AI assistant hoon. Main aapko payment, claims, aur nayi policy lene mein madad kar sakta hoon. Aap apna sawaal English ya Hindi (Hinglish) mein pooch sakte hain!";
   };
 
   const handleSend = (e) => {
