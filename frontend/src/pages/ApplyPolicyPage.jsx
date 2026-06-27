@@ -17,6 +17,13 @@ export default function ApplyPolicyPage() {
   const [processing, setProcessing] = useState(false);
   const [transactionId, setTransactionId] = useState('');
   const [showErrors, setShowErrors] = useState(false);
+  const [files, setFiles] = useState({ aadhaar: null, pan: null });
+
+  const handleFileChange = (e, type) => {
+    if (e.target.files && e.target.files[0]) {
+      setFiles(prev => ({ ...prev, [type]: e.target.files[0] }));
+    }
+  };
 
   useEffect(() => {
     // Load Razorpay script
@@ -263,22 +270,42 @@ export default function ApplyPolicyPage() {
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Document Upload</h3>
                 <div className="space-y-6">
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h4 className="text-lg font-bold text-gray-900 mb-1">Aadhaar Card (Front & Back)</h4>
-                    <p className="text-sm text-gray-500 mb-4">PDF, JPG, or PNG (Max 5MB)</p>
+                  <div className={`border-2 border-dashed ${files.aadhaar ? 'border-green-500 bg-green-50' : 'border-gray-300'} rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer`}>
+                    {files.aadhaar ? (
+                      <>
+                        <CheckCircle2 className="mx-auto h-12 w-12 text-green-500 mb-4" />
+                        <h4 className="text-lg font-bold text-gray-900 mb-1">{files.aadhaar.name}</h4>
+                        <p className="text-sm text-green-600 mb-4">Successfully Selected</p>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                        <h4 className="text-lg font-bold text-gray-900 mb-1">Aadhaar Card (Front & Back)</h4>
+                        <p className="text-sm text-gray-500 mb-4">PDF, JPG, or PNG (Max 5MB)</p>
+                      </>
+                    )}
                     <label className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-50 cursor-pointer inline-block">
-                      Browse Files
-                      <input type="file" className="hidden" accept=".pdf,.jpg,.png" />
+                      {files.aadhaar ? 'Change File' : 'Browse Files'}
+                      <input type="file" onChange={(e) => handleFileChange(e, 'aadhaar')} className="hidden" accept=".pdf,.jpg,.png" />
                     </label>
                   </div>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h4 className="text-lg font-bold text-gray-900 mb-1">PAN Card</h4>
-                    <p className="text-sm text-gray-500 mb-4">PDF, JPG, or PNG (Max 5MB)</p>
+                  <div className={`border-2 border-dashed ${files.pan ? 'border-green-500 bg-green-50' : 'border-gray-300'} rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer`}>
+                    {files.pan ? (
+                      <>
+                        <CheckCircle2 className="mx-auto h-12 w-12 text-green-500 mb-4" />
+                        <h4 className="text-lg font-bold text-gray-900 mb-1">{files.pan.name}</h4>
+                        <p className="text-sm text-green-600 mb-4">Successfully Selected</p>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                        <h4 className="text-lg font-bold text-gray-900 mb-1">PAN Card</h4>
+                        <p className="text-sm text-gray-500 mb-4">PDF, JPG, or PNG (Max 5MB)</p>
+                      </>
+                    )}
                     <label className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-50 cursor-pointer inline-block">
-                      Browse Files
-                      <input type="file" className="hidden" accept=".pdf,.jpg,.png" />
+                      {files.pan ? 'Change File' : 'Browse Files'}
+                      <input type="file" onChange={(e) => handleFileChange(e, 'pan')} className="hidden" accept=".pdf,.jpg,.png" />
                     </label>
                   </div>
                 </div>
