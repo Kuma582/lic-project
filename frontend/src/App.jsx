@@ -32,6 +32,7 @@ import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLoginPage from './pages/AdminLoginPage';
+import AIAssistant from './components/AIAssistant';
 
 function App() {
   return (
@@ -90,6 +91,7 @@ function App() {
               </Routes>
             </main>
             <Footer />
+            <AIAssistant />
           </div>
         </SocketProvider>
       </AuthProvider>
