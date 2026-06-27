@@ -6,10 +6,12 @@ import {
 } from 'lucide-react';
 
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import { apiCall } from '../api';
 
 export default function AdvancedPaymentDashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('pay');
   const [darkMode, setDarkMode] = useState(false);
   
@@ -345,8 +347,8 @@ Status         : SUCCESS
                   className={`flex-1 py-3 rounded-xl font-bold border transition-colors flex items-center justify-center gap-2 ${darkMode ? 'border-gray-600 hover:bg-gray-700 text-white' : 'border-gray-200 hover:bg-gray-50 text-gray-800'}`}>
                   <Download size={18} /> Download Receipt
                 </button>
-                <button onClick={() => { setPaymentStep(0); setActiveTab('dashboard'); }} className="flex-1 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-xl font-bold hover:opacity-90 transition-opacity">
-                  Back to Dashboard
+                <button onClick={() => navigate('/')} className="flex-1 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-xl font-bold hover:opacity-90 transition-opacity">
+                  Back to Home
                 </button>
               </div>
             </motion.div>
