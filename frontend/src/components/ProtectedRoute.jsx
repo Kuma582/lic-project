@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (requireAdmin && userRole !== 'ADMIN') {
+  if (requireAdmin && userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
     // If they are not admin but trying to access admin route
     return <Navigate to="/" replace />;
   }

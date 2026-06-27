@@ -123,6 +123,17 @@ router.post('/verify', verifyUser, async (req, res) => {
         include: { policy: { include: { plan: true } } }
       });
 
+      // Update the policy's next due date by advancing it by 1 month
+      const policy = await prisma.policy.findUnique({ where: { id: policyId } });
+      if (policy && policy.nextDueDate) {
+        const nextDueDate = new Date(policy.nextDueDate);
+        nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+        await prisma.policy.update({
+          where: { id: policyId },
+          data: { nextDueDate }
+        });
+      }
+
       res.json({ status: 'success', message: 'Payment verified successfully', data: newPayment });
     } else {
       res.status(400).json({ status: 'error', message: 'Invalid payment signature' });

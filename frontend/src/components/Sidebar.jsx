@@ -1,30 +1,59 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, CreditCard, ShieldAlert, LogOut, Settings } from 'lucide-react';
+import { LayoutDashboard, FileText, CreditCard, ShieldAlert, LogOut, Settings, Users, IndianRupee, Activity } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { apiCall } from '../api';
 
 export default function Sidebar({ role = "USER" }) {
   const { logout, userEmail } = useAuth();
-  const displayName = userEmail ? userEmail.split('@')[0] : (role === 'ADMIN' ? 'Admin' : 'User');
+  const [hasPolicies, setHasPolicies] = useState(true); // Default to true to prevent flicker, then check
+  const displayName = userEmail ? userEmail.split('@')[0] : (role === 'ADMIN' || role === 'SUPER_ADMIN' ? 'Admin' : 'User');
+
+  const isSuperAdmin = role === 'SUPER_ADMIN';
 
   const adminLinks = [
-    { name: 'Admin Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
-    { name: 'Manage Policies', path: '/admin/policies', icon: <FileText size={20} /> },
-    { name: 'Manage Plans', path: '/admin/plans', icon: <ShieldAlert size={20} /> },
-    { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
+    { name: 'Overview', path: '/admin', icon: <LayoutDashboard size={20} /> },
+    { name: 'Applications', path: '/admin/applications', icon: <FileText size={20} /> },
+    { name: 'Claims', path: '/admin/claims', icon: <Activity size={20} /> },
+    ...(isSuperAdmin ? [{ name: 'Transactions', path: '/admin/transactions', icon: <IndianRupee size={20} /> }] : []),
+    { name: 'Insurance Plans', path: '/admin/plans', icon: <ShieldAlert size={20} /> },
+    { name: 'Customers', path: '/admin/customers', icon: <Users size={20} /> },
+    ...(isSuperAdmin ? [{ name: 'Team', path: '/admin/team', icon: <ShieldAlert size={20} /> }] : []),
+    ...(isSuperAdmin ? [{ name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> }] : []),
   ];
+
+  useEffect(() => {
+    if (role === 'USER') {
+      const checkPolicies = async () => {
+        try {
+          const response = await apiCall('/policies/my-policies', 'GET', null, true);
+          if (response.status === 'success') {
+            setHasPolicies(response.data.length > 0);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      checkPolicies();
+    }
+  }, [role]);
 
   const userLinks = [
-    { name: 'My Policies', path: '/dashboard', icon: <FileText size={20} /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
     { name: 'Pay Installment', path: '/payments', icon: <CreditCard size={20} /> },
+    ...(hasPolicies ? [
+      { name: 'My Policies', path: '/dashboard/policies', icon: <FileText size={20} /> }
+    ] : []),
   ];
 
-  const links = role === 'ADMIN' ? adminLinks : userLinks;
+  const isAdminUser = role === 'ADMIN' || role === 'SUPER_ADMIN';
+  const links = isAdminUser ? adminLinks : userLinks;
 
   return (
     <div className="w-64 bg-lic-dark text-white flex flex-col min-h-[calc(100vh-80px)] border-r border-gray-800 shadow-2xl">
       <div className="p-6">
         <h3 className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-3">
-          {role === 'ADMIN' ? 'Admin Panel' : 'My Account'}
+          {isAdminUser ? 'Admin Panel' : 'My Account'}
         </h3>
         
         {/* User Profile Card */}

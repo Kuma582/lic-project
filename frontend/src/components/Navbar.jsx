@@ -7,7 +7,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, userRole, userEmail, userName, logout } = useAuth();
 
-  const dashboardLink = userRole === 'ADMIN' ? '/admin' : '/dashboard';
+  const isAdminUser = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
+  const dashboardLink = isAdminUser ? '/admin' : '/dashboard';
 
   return (
     <nav className="bg-lic-blue text-white shadow-lg sticky top-0 z-50">
@@ -49,15 +50,15 @@ export default function Navbar() {
               </>
             ) : (
               <div className="flex items-center gap-4">
-                <div className="flex items-center group" title={userRole === 'ADMIN' ? "Admin Profile" : "User Profile"}>
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-md cursor-default ${userRole === 'ADMIN' ? 'bg-red-600 text-white' : 'bg-lic-gold text-lic-blue'}`}>
+                <Link to={dashboardLink} className="flex items-center group" title={isAdminUser ? "Admin Profile" : "My Dashboard"}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-md group-hover:scale-105 transition-transform ${isAdminUser ? 'bg-red-600 text-white' : 'bg-lic-gold text-lic-blue'}`}>
                     {userName ? userName.charAt(0).toUpperCase() : (userEmail ? userEmail.charAt(0).toUpperCase() : 'U')}
                   </div>
                   <div className="ml-3 hidden lg:flex flex-col mr-4">
-                    <span className="text-sm font-bold text-white">{userName}</span>
+                    <span className="text-sm font-bold text-white group-hover:text-lic-gold transition-colors">{userName}</span>
                     <span className="text-xs text-blue-200">{userEmail}</span>
                   </div>
-                </div>
+                </Link>
                 <button onClick={logout} className="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-md transition-colors text-sm">
                   Logout
                 </button>
@@ -95,8 +96,10 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {userRole === 'ADMIN' && (
+                  {isAdminUser ? (
                     <Link to="/admin" onClick={() => setIsOpen(false)} className="text-center bg-lic-gold text-lic-blue hover:bg-yellow-400 font-bold px-4 py-2 rounded-md transition-colors">Admin Dashboard</Link>
+                  ) : (
+                    <Link to="/dashboard" onClick={() => setIsOpen(false)} className="text-center bg-lic-gold text-lic-blue hover:bg-yellow-400 font-bold px-4 py-2 rounded-md transition-colors">My Dashboard</Link>
                   )}
                   <button onClick={() => { logout(); setIsOpen(false); }} className="w-full text-center bg-blue-800 text-white hover:bg-blue-700 font-medium px-4 py-2 rounded-md transition-colors">Logout</button>
                 </>

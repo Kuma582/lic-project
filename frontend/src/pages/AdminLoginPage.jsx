@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
     const response = await login(email, password);
     
     if (response.success) {
-      if (response.role === 'ADMIN') {
+      if (response.role === 'ADMIN' || response.role === 'SUPER_ADMIN') {
         navigate('/admin');
       } else {
         setError('You do not have admin privileges.');

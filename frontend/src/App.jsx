@@ -13,15 +13,21 @@ import DashboardPage from './pages/DashboardPage';
 import MyPoliciesPage from './pages/MyPoliciesPage';
 import PremiumPaymentsPage from './pages/PremiumPaymentsPage';
 import ApplyPolicyPage from './pages/ApplyPolicyPage';
-import AdminDashboardPage from './pages/AdminDashboardPage';
-import AdminPoliciesPage from './pages/AdminPoliciesPage';
-import AdminManagePlansPage from './pages/AdminManagePlansPage';
+import OverviewPage from './pages/admin/OverviewPage';
+import ApplicationsPage from './pages/admin/ApplicationsPage';
+import PlansManagerPage from './pages/admin/PlansManagerPage';
+import CustomersPage from './pages/admin/CustomersPage';
+import TransactionsPage from './pages/admin/TransactionsPage';
+import AdminClaimsPage from './pages/admin/ClaimsPage';
+import AdminSettingsPage from './pages/admin/SettingsPage';
+import TeamPage from './pages/admin/TeamPage';
 import ContactPage from './pages/ContactPage';
 import SettingsPage from './pages/SettingsPage';
 import PremiumCalculatorPage from './pages/PremiumCalculatorPage';
 import ClaimsPage from './pages/ClaimsPage';
 import TrackClaimPage from './pages/TrackClaimPage';
 import LegalPage from './pages/LegalPage';
+import AdvancedPaymentDashboard from './pages/AdvancedPaymentDashboard';
 import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -68,14 +74,18 @@ function App() {
                 <Route path="/apply" element={<ProtectedRoute><ApplyPolicyPage /></ProtectedRoute>} />
                 
                 {/* Premium Payments Route (Protected) */}
-                <Route path="/payments" element={<ProtectedRoute><PremiumPaymentsPage /></ProtectedRoute>} />
+                <Route path="/payments" element={<ProtectedRoute><AdvancedPaymentDashboard /></ProtectedRoute>} />
                 
                 {/* Admin Dashboard Routes (Protected) */}
                 <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><DashboardLayout /></ProtectedRoute>}>
-                  <Route index element={<AdminDashboardPage />} />
-                  <Route path="policies" element={<AdminPoliciesPage />} />
-                  <Route path="plans" element={<AdminManagePlansPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
+                  <Route index element={<OverviewPage />} />
+                  <Route path="applications" element={<ApplicationsPage />} />
+                  <Route path="plans" element={<PlansManagerPage />} />
+                  <Route path="customers" element={<CustomersPage />} />
+                  <Route path="team" element={<TeamPage />} />
+                  <Route path="transactions" element={<TransactionsPage />} />
+                  <Route path="claims" element={<AdminClaimsPage />} />
+                  <Route path="settings" element={<AdminSettingsPage />} />
                 </Route>
               </Routes>
             </main>

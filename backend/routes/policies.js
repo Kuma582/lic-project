@@ -24,7 +24,7 @@ router.get('/my-policies', verifyUser, async (req, res) => {
     // 1. Fetch real active policies
     const activePolicies = await prisma.policy.findMany({
       where: { userId: req.userId },
-      include: { plan: true }
+      include: { plan: true, payments: { where: { status: 'Success' } } }
     });
 
     // 2. Fetch applications (to show pending ones)
@@ -34,14 +34,18 @@ router.get('/my-policies', verifyUser, async (req, res) => {
     });
 
     // Format policies
-    const formattedPolicies = activePolicies.map(p => ({
-      id: p.policyNo,
-      name: p.plan.name,
-      status: p.status.toUpperCase(),
-      premium: `₹${p.premium.toLocaleString()}/mo`,
-      nextDue: p.nextDueDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-      sumAssured: `₹${p.totalAmount.toLocaleString()}`
-    }));
+    const formattedPolicies = activePolicies.map(p => {
+      const totalPaid = p.payments.reduce((sum, payment) => sum + payment.amount, 0);
+      return {
+        id: p.policyNo,
+        name: p.plan.name,
+        status: p.status.toUpperCase(),
+        premium: `₹${p.premium.toLocaleString()}/mo`,
+        totalPaid: `₹${totalPaid.toLocaleString()}`,
+        nextDue: p.nextDueDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+        sumAssured: `₹${p.totalAmount.toLocaleString()}`
+      };
+    });
 
     // Add pending applications as well
     const formattedApps = applications
@@ -51,6 +55,7 @@ router.get('/my-policies', verifyUser, async (req, res) => {
         name: app.plan.name,
         status: app.status,
         premium: app.plan.premium,
+        totalPaid: '-',
         nextDue: '-',
         sumAssured: 'Pending Approval'
       }));

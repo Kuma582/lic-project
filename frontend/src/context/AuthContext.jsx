@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     
     if (response.status === 'success') {
       const { token, user } = response;
-      const expiryTime = new Date().getTime() + 10 * 60 * 1000; // 10 minutes
+      const expiryTime = new Date().getTime() + 365 * 24 * 60 * 60 * 1000; // 365 days
 
       setIsAuthenticated(true);
       setUserRole(user.role);
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     
     if (response.status === 'success') {
       const { token, user } = response;
-      const expiryTime = new Date().getTime() + 10 * 60 * 1000; // 10 minutes
+      const expiryTime = new Date().getTime() + 365 * 24 * 60 * 60 * 1000; // 365 days
 
       setIsAuthenticated(true);
       setUserRole(user.role);

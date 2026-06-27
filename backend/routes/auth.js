@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
       }
     });
 
-    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: '10m' });
+    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: '365d' });
     
     res.json({ status: 'success', token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: '10m' });
+    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: '365d' });
     
     res.json({ status: 'success', token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {

@@ -10,6 +10,7 @@ import plansRoutes from './routes/plans.js';
 import applicationsRoutes from './routes/applications.js';
 import paymentsRoutes from './routes/payments.js';
 import policiesRoutes from './routes/policies.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use('/api/plans', plansRoutes);
 app.use('/api/applications', applicationsRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/policies', policiesRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/', (req, res) => {

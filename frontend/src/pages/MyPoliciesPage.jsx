@@ -64,6 +64,7 @@ export default function MyPoliciesPage() {
                 <th className="px-6 py-4 font-semibold">Plan Name</th>
                 <th className="px-6 py-4 font-semibold">Status</th>
                 <th className="px-6 py-4 font-semibold">Premium</th>
+                <th className="px-6 py-4 font-semibold">Total Paid</th>
                 <th className="px-6 py-4 font-semibold">Next Due</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -71,11 +72,11 @@ export default function MyPoliciesPage() {
             <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">Loading your policies...</td>
+                  <td colSpan="7" className="px-6 py-8 text-center text-gray-500">Loading your policies...</td>
                 </tr>
               ) : policies.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">You don't have any policies yet. Apply for a new one!</td>
+                  <td colSpan="7" className="px-6 py-8 text-center text-gray-500">You don't have any policies yet. Apply for a new one!</td>
                 </tr>
               ) : (
                 policies.map((policy) => (
@@ -91,6 +92,7 @@ export default function MyPoliciesPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">{policy.premium}</td>
+                    <td className="px-6 py-4 font-bold text-green-600">{policy.totalPaid}</td>
                     <td className="px-6 py-4">{policy.nextDue}</td>
                     <td className="px-6 py-4 flex justify-end gap-2">
                       <button className="p-2 text-gray-500 hover:text-lic-blue bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow transition-all">
