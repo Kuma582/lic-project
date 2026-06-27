@@ -62,6 +62,43 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Middleware to verify user token for subsequent routes
+const verifyUser = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (e) {
+    return res.status(401).json({ status: 'error', message: 'Invalid token' });
+  }
+};
+
+// Get logged-in user's applications
+router.get('/my', verifyUser, async (req, res) => {
+  try {
+    const applications = await prisma.application.findMany({
+      where: { userId: req.userId },
+      include: { plan: { select: { name: true } } },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    const formattedApps = applications.map(app => ({
+      id: app.appReference,
+      plan: app.plan?.name || 'LIC Plan',
+      date: app.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+      status: app.status
+    }));
+
+    res.json({ status: 'success', data: formattedApps });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'error', message: 'Failed to fetch your applications' });
+  }
+});
+
 // Get all applications (Admin)
 router.get('/', async (req, res) => {
   try {
