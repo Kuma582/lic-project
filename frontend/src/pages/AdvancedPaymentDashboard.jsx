@@ -235,7 +235,7 @@ Status         : SUCCESS
                       }`}
                     >
                       {selectedPolicy?.id === policy.id ? 'Selected' : 'Select'}
-                    </button
+                    </button>
                   </td>
                 </tr>
               )))}
