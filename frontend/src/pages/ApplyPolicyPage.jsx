@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ShieldCheck, Upload, CheckCircle2 } from 'lucide-react';
 import { apiCall } from '../api';
+import toast from 'react-hot-toast';
 
 export default function ApplyPolicyPage() {
   const [step, setStep] = useState(1);
@@ -45,6 +46,25 @@ export default function ApplyPolicyPage() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleNextStep = () => {
+    if (step === 1) {
+      if (!formData.fullName || !formData.phone || !formData.dob || !formData.gender || !formData.maritalStatus || !formData.address) {
+        toast.error('Please fill all Personal Details before proceeding.');
+        return;
+      }
+      if (formData.phone.length !== 10) {
+        toast.error('Please enter a valid 10-digit phone number.');
+        return;
+      }
+    } else if (step === 2) {
+      if (!formData.nomineeName || !formData.nomineeRelationship || !formData.nomineeDob) {
+        toast.error('Please fill all Nominee Details before proceeding.');
+        return;
+      }
+    }
+    setStep(step + 1);
   };
 
   const handleSubmit = async () => {
@@ -317,7 +337,7 @@ export default function ApplyPolicyPage() {
 
                 {step < 4 ? (
                   <button
-                    onClick={() => setStep(step + 1)}
+                    onClick={handleNextStep}
                     className="px-8 py-3 bg-lic-blue text-white rounded-lg font-bold flex items-center gap-2 hover:bg-blue-800 transition-colors shadow-md"
                   >
                     Save & Next <ArrowRight size={18} />
