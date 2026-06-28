@@ -14,7 +14,7 @@ export const SocketProvider = ({ children }) => {
     // Determine the base URL dynamically based on environment
     const BASE_URL = import.meta.env.VITE_API_URL 
       ? import.meta.env.VITE_API_URL.replace('/api', '') 
-      : 'http://localhost:5000';
+      : (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
       
     const newSocket = io(BASE_URL);
     setSocket(newSocket);
