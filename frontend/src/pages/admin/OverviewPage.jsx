@@ -11,13 +11,13 @@ export default function OverviewPage() {
     fetchStats();
   }, []);
 
-  const fetchStats = async () => {
+  async function fetchStats() {
     try {
       const response = await apiCall('/admin/stats');
       if (response.status === 'success') {
         setStats(response.data);
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       console.error('Failed to fetch stats:', error);
     } finally {
       setLoading(false);

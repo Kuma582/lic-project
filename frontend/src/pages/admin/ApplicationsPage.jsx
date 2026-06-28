@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { apiCall } from '../../api';
 import { useSocket } from '../../context/SocketContext';
 import toast from 'react-hot-toast';
-import { Search, CheckCircle, XCircle, Eye, Filter, Download } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Eye, Filter, Download, X } from 'lucide-react';
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState([]);
@@ -30,13 +30,13 @@ export default function ApplicationsPage() {
     }
   }, [socket]);
 
-  const fetchApplications = async () => {
+  async function fetchApplications() {
     try {
       const response = await apiCall('/applications');
       if (response.status === 'success') {
         setApplications(response.data);
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Failed to load applications');
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ export default function ApplicationsPage() {
       } else {
         toast.error(response.message || 'Error updating status');
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Server error');
     }
   };
@@ -233,7 +233,12 @@ function ApplicationModal({ app, onClose, onApprove, onReject }) {
             <h2 className="text-2xl font-bold text-gray-900">Application Review</h2>
             <p className="text-sm font-medium text-gray-500 mt-1">Reference: <span className="text-lic-blue">{app.id}</span></p>
           </div>
-          <StatusBadge status={app.status} />
+          <div className="flex items-center gap-4">
+            <StatusBadge status={app.status} />
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+              <X size={24} />
+            </button>
+          </div>
         </div>
         
         <div className="p-6 overflow-y-auto bg-white flex-grow">

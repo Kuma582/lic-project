@@ -11,13 +11,13 @@ export default function CustomersPage() {
     fetchCustomers();
   }, []);
 
-  const fetchCustomers = async () => {
+  async function fetchCustomers() {
     try {
       const response = await apiCall('/admin/customers');
       if (response.status === 'success') {
         setCustomers(response.data);
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       console.error('Failed to load customers', error);
     } finally {
       setLoading(false);

@@ -127,7 +127,7 @@ router.get('/customers', async (req, res) => {
 });
 
 // Get all payments (transactions)
-router.get('/payments', requireSuperAdmin, async (req, res) => {
+router.get('/payments', async (req, res) => {
   try {
     const payments = await prisma.payment.findMany({
       include: {

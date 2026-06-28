@@ -42,7 +42,7 @@ export default function SettingsPage() {
       } else {
         toast.error(response.message || 'Failed to update password');
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Server error');
     } finally {
       setLoading(false);

@@ -16,13 +16,13 @@ export default function TeamPage() {
     fetchTeam();
   }, []);
 
-  const fetchTeam = async () => {
+  async function fetchTeam() {
     try {
       const response = await apiCall('/admin/team');
       if (response.status === 'success') {
         setTeam(response.data);
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Failed to load team members');
     } finally {
       setLoading(false);
@@ -46,7 +46,7 @@ export default function TeamPage() {
       } else {
         toast.error(response.message || 'Failed to add member');
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Server error');
     }
   };
@@ -66,7 +66,7 @@ export default function TeamPage() {
       } else {
         toast.error(response.message || 'Error revoking access');
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Server error');
     }
   };

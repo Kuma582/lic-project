@@ -3,11 +3,9 @@ import { apiCall } from '../../api';
 import toast from 'react-hot-toast';
 import { IndianRupee, Download, Search, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { Navigate } from 'react-router-dom';
 
 export default function TransactionsPage() {
-  const { userRole } = useAuth();
-  const [payments, setPayments] = useState([]);
+    const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
@@ -15,13 +13,13 @@ export default function TransactionsPage() {
     fetchPayments();
   }, []);
 
-  const fetchPayments = async () => {
+  async function fetchPayments() {
     try {
       const response = await apiCall('/admin/payments');
       if (response.status === 'success') {
         setPayments(response.data);
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       toast.error('Failed to load transactions');
     } finally {
       setLoading(false);
@@ -59,15 +57,11 @@ export default function TransactionsPage() {
     toast.success('Transactions exported successfully');
   };
 
-  if (userRole !== 'SUPER_ADMIN') {
-    return <Navigate to="/admin" replace />;
-  }
-
   return (
     <div className="animate-in fade-in duration-500">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Financial Transactions</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Payments</h1>
           <p className="text-gray-500 mt-2">Monitor all premium collections and policy payments.</p>
         </div>
       </div>
